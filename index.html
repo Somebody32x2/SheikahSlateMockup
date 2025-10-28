@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sheikah Slate Mockup</title>
+</head>
+<body>
+<div id="runesPage" class="page">
+    <div id="runesContainer">
+        <div class="rune" data-value="0"></div>
+        <div class="rune" data-value="1"></div>
+        <div class="rune" data-value="2"></div>
+        <div class="rune" data-value="3"></div>
+        <div class="rune" data-value="4"></div>
+        <div class="rune" data-value="5"></div>
+        <div class="rune" data-value="6"></div>
+        <div class="rune" data-value="7"></div>
+    </div>
+</div>
+</body>
+<script src="main.js"></script>
+<style>
+    :root {
+        --selected-rune: 0;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #091926;
+        overflow: hidden;
+        background-image: url("images/runes2.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .page {
+        width: 100vw;
+        height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #runesPage {
+        display: flex;
+    }
+    #runesContainer {
+        width: 37rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .rune {
+        width: 4rem;
+        height: 4rem;
+        outline: #ff9393 3px solid;
+    }
+    .rune.selected {
+        background: darkblue;
+        box-shadow: 0 2px 4px 0 rgba(0, 233, 255, 1);
+    }
+</style>
+</html>

@@ -1,0 +1,4 @@
+[submodule "maps/maps"]
+	path = maps/maps
+	url = https://github.com/zeldadungeon/maps.git
+	branch = release
