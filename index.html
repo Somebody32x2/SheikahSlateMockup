@@ -3,12 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent">
+    <link rel="manifest" href="./manifest.json">
     <title>Sheikah Slate Mockup</title>
 </head>
 <body>
+<button style="position: absolute; top: 10px; left: 10px; z-index: 1000" onclick="window.location.reload();">
+    Reload
+</button>
+<p id="log" style="color: white; position: absolute; bottom: 10px; left: 10px; font-family: monospace;">
+
+</p>
 <div id="runesPage" class="page">
+    <img src="images/master_cycle_rune_e.png" id="runesOverlay">
+    <p id="runeName"></p>
     <div id="runesContainer">
         <div class="rune" data-value="0"></div>
         <div class="rune" data-value="1"></div>
@@ -17,8 +31,23 @@
         <div class="rune" data-value="4"></div>
         <div class="rune" data-value="5"></div>
         <div class="rune" data-value="6"></div>
-        <div class="rune" data-value="7"></div>
+<!--        <div class="rune" data-value="7"></div>-->
     </div>
+</div>
+<div id="mapPage" class="page hidden">
+    <img src="images/map_overlay.png" id="mapOverlay">
+    <div id="mapOverlayInteractable"></div>
+    <iframe id="mapIframe" src="maps/botw"></iframe>
+</div>
+<div id="photosPage" class="page hidden">
+    <img src="images/album.png">
+</div>
+<div id="compendiumPage" class="page hidden">
+    <img src="images/compendium.png">
+</div>
+<div id="cameraPage" class="page hidden">
+    <img src="images/camera_overlay_e.png" id="cameraOverlay">
+    <video id="cameraVideo" autoplay playsinline></video>
 </div>
 </body>
 <script src="main.js"></script>
@@ -31,9 +60,6 @@
         padding: 0;
         background-color: #091926;
         overflow: hidden;
-        background-image: url("images/runes2.png");
-        background-repeat: no-repeat;
-        background-size: cover;
     }
 
     .page {
@@ -45,22 +71,94 @@
         align-items: center;
     }
     #runesPage {
-        display: flex;
+        flex-direction: column;
+    }
+    #runesOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: -10;
+        object-fit: stretch;
+        pointer-events: none;
     }
     #runesContainer {
-        width: 37rem;
+        margin-top: -2.4rem;
+        width: 28.5rem;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        font-family: "Calamity-Regular", "OpenSansBold", "Open Sans", sans-serif;
     }
     .rune {
-        width: 4rem;
-        height: 4rem;
-        outline: #ff9393 3px solid;
+        width: 3.4rem;
+        height: 3.4rem;
+        outline: #0e4163 1px solid;
     }
     .rune.selected {
-        background: darkblue;
-        box-shadow: 0 2px 4px 0 rgba(0, 233, 255, 1);
+        background: rgba(51, 106, 164, 0.8);
+        box-shadow: 0 2px 4px 0 rgba(51, 106, 164, 0.8);
+    }
+    .hidden {
+        display: none !important;
+    }
+    #mapOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 10;
+        /*object-fit: cover;*/
+        pointer-events: none;
+    }
+    #mapOverlayInteractable {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3rem;
+        z-index: 20;
+    }
+    #mapPage iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    #photosPage img, #compendiumPage img {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+    }
+    #cameraVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    #cameraOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 10;
+        object-fit: cover;
+        pointer-events: none;
+    }
+    #runeName {
+        position: absolute;
+        top: 5.3rem;
+        font-family: "Calamity-Regular", "OpenSansBold", "Open Sans", sans-serif;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #4becfc;
+        /*text-shadow: 2px 2px 4px #000000;*/
+        margin-bottom: 2rem;
+    }
+    @font-face {
+        font-family: Calamity-Regular;
+        src: url('/assets/Calamity-Regular/Calamity-Regular.otf') format('opentype');
     }
 </style>
 </html>
