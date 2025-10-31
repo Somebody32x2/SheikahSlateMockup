@@ -17,7 +17,7 @@
 <button style="position: absolute; top: 10px; left: 10px; z-index: 1000" onclick="window.location.reload();">
     Reload
 </button>
-<p id="log" style="color: white; position: absolute; bottom: 10px; left: 10px; font-family: monospace;">
+<p id="log" class="hidden" style="color: white; position: absolute; bottom: 10px; left: 10px; font-family: monospace;">
 
 </p>
 <div id="runesPage" class="page">
@@ -33,6 +33,8 @@
         <div class="rune" data-value="6"></div>
 <!--        <div class="rune" data-value="7"></div>-->
     </div>
+    <p id="runeSubtitle"></p>
+    <p id="runeDescription"></p>
 </div>
 <div id="mapPage" class="page hidden">
     <img src="images/map_overlay.png" id="mapOverlay">
@@ -54,6 +56,8 @@
 <style>
     :root {
         --selected-rune: 0;
+        --100-vh: 100vh;
+        --100-vw: 100vw;
     }
     body {
         margin: 0;
@@ -63,8 +67,8 @@
     }
 
     .page {
-        width: 100vw;
-        height: 100vh;
+        width: var(--100-vw);
+        height: var(--100-vh);
 
         display: flex;
         justify-content: center;
@@ -78,7 +82,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100vh;
+        height: var(--100-vh);
         z-index: -10;
         object-fit: stretch;
         pointer-events: none;
@@ -96,9 +100,31 @@
         height: 3.4rem;
         outline: #0e4163 1px solid;
     }
+    @property --glow-radius {
+        syntax: '<length>';
+        inherits: false;
+        initial-value: 0;
+    }
     .rune.selected {
-        background: rgba(51, 106, 164, 0.8);
-        box-shadow: 0 2px 4px 0 rgba(51, 106, 164, 0.8);
+        --glow-radius: 4px;
+        --glow-spread: 5px;
+        background: rgba(51, 106, 164, 0.3);
+        box-shadow:
+        var(--glow-radius) var(--glow-radius) var(--glow-spread) 0px #4BECFC, var(--glow-radius) calc(var(--glow-radius) * -1) var(--glow-spread) 0px #4BECFC,
+        calc(var(--glow-radius) * -1) calc(var(--glow-radius) * -1) var(--glow-spread) 0px #4BECFC, calc(var(--glow-radius) * -1) var(--glow-radius) var(--glow-spread) 0px #4BECFC;
+        animation: glow 2s infinite;
+    }
+    /*--glow-radius oscilates between 2 and 4 px*/
+    @keyframes glow {
+        0% {
+            --glow-radius: 2px;
+        }
+        50% {
+            --glow-radius: 4px;
+        }
+        100% {
+            --glow-radius: 2px;
+        }
     }
     .hidden {
         display: none !important;
@@ -108,7 +134,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100vh;
+        height: var(--100-vh);
         z-index: 10;
         /*object-fit: cover;*/
         pointer-events: none;
@@ -141,7 +167,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100vh;
+        height: var(--100-vh);
         z-index: 10;
         object-fit: cover;
         pointer-events: none;
@@ -156,9 +182,45 @@
         /*text-shadow: 2px 2px 4px #000000;*/
         margin-bottom: 2rem;
     }
+    #runeSubtitle {
+        position: absolute;
+        top: 13.1rem;
+        font-family: "Calamity-Regular", "OpenSansBold", "Open Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #4becfc;
+        /*text-shadow: 2px 2px 4px #000000;*/
+        margin-bottom: 2rem;
+    }
+    #runeDescription {
+        position: absolute;
+        top: 15.5rem;
+        font-family: "Calamity-Regular", "OpenSansBold", "Open Sans", sans-serif;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #4becfc;
+        /*text-shadow: 2px 2px 4px #000000;*/
+        margin-bottom: 2rem;
+        width: 22rem;
+    }
     @font-face {
         font-family: Calamity-Regular;
         src: url('/assets/Calamity-Regular/Calamity-Regular.otf') format('opentype');
+    }
+
+    @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
+        html {
+            transform: rotate(-90deg);
+            transform-origin: left top;
+            width: 100vh;
+            height: 100vw;
+            overflow-x: hidden;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            --100-vh: 100vw !important;
+            --100-vw: 100vh !important;
+        }
     }
 </style>
 </html>

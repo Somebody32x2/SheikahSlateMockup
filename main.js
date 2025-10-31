@@ -4,7 +4,10 @@ let currentPage = 1; // Possible values: "runes", "map", "photos"
 let pageOrder = ["camera", "runes", "map", "photos", "compendium"]
 let touchstartX = 0;
 let touchendX = 0;
-
+let mp3s = [];
+for (let i = 0; i < 7; i++) {
+    mp3s.push(new Audio(`/assets/runeSfx/${i}.mp3`));
+}
 const swipeZone = document.body; // Or any specific element you want to track
 
 // Custom console.log that shows messages in a debug area on the page
@@ -18,11 +21,20 @@ function debug(message) {
 }
 debug("hi")
 swipeZone.addEventListener('touchstart', e => {
-    touchstartX = e.changedTouches[0].screenX;
+    if (screen.orientation.type.includes("portrait-primary")) {
+        touchstartX = e.changedTouches[0].screenY;
+    } else {
+        touchstartX = e.changedTouches[0].screenX;
+    }
 });
 
 swipeZone.addEventListener('touchend', e => {
-    touchendX = e.changedTouches[0].screenX;
+    if (screen.orientation.type.includes("portrait-primary")){
+        touchendX = e.changedTouches[0].screenY;
+    }
+    else {
+        touchendX = e.changedTouches[0].screenX;
+    }
     handleGesture();
 });
 
@@ -30,16 +42,21 @@ function handleGesture() {
     // Define a minimum horizontal distance for a valid swipe
     const swipeThreshold = 50;
 
+    let mult = 1;
+    if (screen.orientation.type.includes("portrait-primary")) {
+        mult = -1;
+    }
+
     if (touchendX < touchstartX - swipeThreshold) {
         // Swipe Left: Navigate to the next page
         debug("Swiped left!");
-        changePage(1);
+        changePage(1 * mult);
     }
 
     if (touchendX > touchstartX + swipeThreshold) {
         // Swipe Right: Navigate to the previous page
         debug("Swiped right!");
-        changePage(-1);
+        changePage(-1 * mult);
 
     }
 }
@@ -65,14 +82,41 @@ function changePage(delta) {
 
 // Runes
 let activeRune = 0;
+let lastSfxTime = 0;
 let runeNames = ["Remote Bomb +", "Remote Bomb +", "Magnesis", "Stasis +", "Cryonis", "Camera", "Master Cycle Zero"];
+let runeSubtitles = [
+    "A bomb that can be detonated remotely.",
+    "A bomb that can be detonated remotely.",
+    "Manipulate metallic objects using magnetism.",
+    "Stop the flow of time for an object.",
+    "Create a pillar of ice from a water surface.",
+    "Instantly render a visible image into a picture.",
+    "Summon Master Cycle Zero."
+]
+let runeDescriptions = [
+    "Powered-up bombs now have a stronger blast and recharge faster. The force of the blast can damage monsters or destroy objects. There are round and cube so use whichever best fits the situation.",
+    "Powered-up bombs now have a stronger blast and recharge faster. The force of the blast can damage monsters or destroy objects. There are round and cube so use whichever best fits the situation.",
+    "The Magnesis Rune allows you to lift and move metallic objects using magnetic force. You can manipulate these objects to solve puzzles, create bridges, or even use them as weapons against enemies.",
+    "The Stasis Rune lets you freeze objects in time temporarily. When you hit an object with Stasis, it will stop moving for a short period, allowing you to set up powerful kinetic energy releases when time resumes.",
+    "The Cryonis Rune enables you to create pillars of ice on water surfaces. These ice pillars can be used as platforms to cross bodies of water, reach higher areas, or block enemy movements.",
+    "The Camera Rune allows you to take pictures of your surroundings. You can capture images of landmarks, creatures, and items, which are then stored in your Hyrule Compendium for later reference.",
+    "The Master Cycle Zero is a powerful motorcycle that you can summon using this rune. It allows for fast travel across Hyrule, making exploration and transportation much more efficient."
+]
 function runeClickHandler(event) {
     activeRune = event.target.getAttribute("data-value");
     document.startViewTransition(()=> {
         document.querySelectorAll(".rune.selected").forEach((el) => {el.classList.remove("selected");});
         document.querySelector(`.rune[data-value='${activeRune}']`).classList.add("selected");
         document.getElementById("runeName").innerText = runeNames[activeRune];
+        document.getElementById("runeSubtitle").innerText = runeSubtitles[activeRune];
+        document.getElementById("runeDescription").innerText = runeDescriptions[activeRune];
     })
+    let currentTime = Date.now();
+    if (currentTime - lastSfxTime > 2000) { // Throttle to prevent rapid replays
+        mp3s[activeRune].currentTime = 0; // Rewind to start
+        mp3s[activeRune].play();
+        lastSfxTime = currentTime;
+    }
 }
 runeClickHandler({target: document.querySelector(`.rune[data-value='${activeRune}']`)});
 

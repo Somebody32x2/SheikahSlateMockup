@@ -11,6 +11,7 @@
   ],
   "background_color": "#091926",
   "display": "standalone",
+  "orientation": "landscape-primary",
   "scope": "/",
   "theme_color": "#091926",
   "shortcuts": [
