@@ -181,6 +181,7 @@
         color: #4becfc;
         /*text-shadow: 2px 2px 4px #000000;*/
         margin-bottom: 2rem;
+        text-align: center;
     }
     #runeSubtitle {
         position: absolute;
@@ -189,10 +190,15 @@
         font-size: 1rem;
         font-weight: bold;
         color: #4becfc;
+        text-align: center;
+        white-space: nowrap;
         /*text-shadow: 2px 2px 4px #000000;*/
         margin-bottom: 2rem;
+        animation: typing 1s, blink-caret 0.75s step-end infinite;
     }
-    #runeDescription {
+
+
+    p {
         position: absolute;
         top: 15.5rem;
         font-family: "Calamity-Regular", "OpenSansBold", "Open Sans", sans-serif;
@@ -202,6 +208,17 @@
         /*text-shadow: 2px 2px 4px #000000;*/
         margin-bottom: 2rem;
         width: 22rem;
+        animation: typing 3.5s, blink-caret 0.75s step-end infinite;
+    }
+
+    /* The typing effect */
+    @keyframes typing {
+        from {
+            width: 0
+        }
+        to {
+            width: 22rem
+        }
     }
     @font-face {
         font-family: Calamity-Regular;

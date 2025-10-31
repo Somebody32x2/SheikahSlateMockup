@@ -1,7 +1,10 @@
 console.log("Sheikah Slate booting up")
 
-let currentPage = 1; // Possible values: "runes", "map", "photos"
-let pageOrder = ["camera", "runes", "map", "photos", "compendium"]
+let currentPage = 0; // Possible values: "runes", "map", "photos"
+let pageOrder = ["runes", "map", "photos", "compendium"]
+let galleryShown = false;
+let photoIndex = 0;
+let photos = 3;
 let touchstartX = 0;
 let touchendX = 0;
 let mp3s = [];
@@ -19,6 +22,7 @@ function debug(message) {
         log.scrollTop = log.scrollHeight; // Auto-scroll to the bottom
     }
 }
+
 debug("hi")
 swipeZone.addEventListener('touchstart', e => {
     if (screen.orientation.type.includes("portrait-primary")) {
@@ -29,10 +33,9 @@ swipeZone.addEventListener('touchstart', e => {
 });
 
 swipeZone.addEventListener('touchend', e => {
-    if (screen.orientation.type.includes("portrait-primary")){
+    if (screen.orientation.type.includes("portrait-primary")) {
         touchendX = e.changedTouches[0].screenY;
-    }
-    else {
+    } else {
         touchendX = e.changedTouches[0].screenX;
     }
     handleGesture();
@@ -62,20 +65,19 @@ function handleGesture() {
 }
 
 function changePage(delta) {
-    if (currentPage === 0 && delta === -1) return;
-    if (currentPage === pageOrder.length - 1 && delta === 1) return;
-    let newPage = currentPage + delta;
+    if (!galleryShown) {
+        if (currentPage === 0 && delta === -1) return;
+        if (currentPage === pageOrder.length - 1 && delta === 1) return;
+        let newPage = currentPage + delta;
 
-    document.startViewTransition(() => {
-        document.getElementById(pageOrder[currentPage] + "Page").classList.add("hidden");
-        document.getElementById(pageOrder[newPage] + "Page").classList.remove("hidden");
-        currentPage = newPage;
-    });
-    if (pageOrder[newPage] === "camera") {
-        getVideo();
-    }
-    if (pageOrder[newPage] === "map") {
-        injectIframeCSS();
+        document.startViewTransition(() => {
+            document.getElementById(pageOrder[currentPage] + "Page").classList.add("hidden");
+            document.getElementById(pageOrder[newPage] + "Page").classList.remove("hidden");
+            currentPage = newPage;
+        });
+        if (pageOrder[newPage] === "map") {
+            injectIframeCSS();
+        }
     }
 
 }
@@ -102,10 +104,13 @@ let runeDescriptions = [
     "The Camera Rune allows you to take pictures of your surroundings. You can capture images of landmarks, creatures, and items, which are then stored in your Hyrule Compendium for later reference.",
     "The Master Cycle Zero is a powerful motorcycle that you can summon using this rune. It allows for fast travel across Hyrule, making exploration and transportation much more efficient."
 ]
+
 function runeClickHandler(event) {
     activeRune = event.target.getAttribute("data-value");
-    document.startViewTransition(()=> {
-        document.querySelectorAll(".rune.selected").forEach((el) => {el.classList.remove("selected");});
+    document.startViewTransition(() => {
+        document.querySelectorAll(".rune.selected").forEach((el) => {
+            el.classList.remove("selected");
+        });
         document.querySelector(`.rune[data-value='${activeRune}']`).classList.add("selected");
         document.getElementById("runeName").innerText = runeNames[activeRune];
         document.getElementById("runeSubtitle").innerText = runeSubtitles[activeRune];
@@ -118,6 +123,7 @@ function runeClickHandler(event) {
         lastSfxTime = currentTime;
     }
 }
+
 runeClickHandler({target: document.querySelector(`.rune[data-value='${activeRune}']`)});
 
 document.querySelectorAll(".rune").forEach((el) => {
@@ -144,6 +150,7 @@ function injectIframeCSS() {
         iframeDoc.head.appendChild(style);
     }
 }
+
 // var video = document.querySelector("#cameraVideo");
 // video.setAttribute('autoplay', '');
 // video.setAttribute('muted', '');
