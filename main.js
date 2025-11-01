@@ -4,7 +4,7 @@ let currentPage = 0; // Possible values: "runes", "map", "photos"
 let pageOrder = ["runes", "map", "photos", "compendium"]
 let galleryShown = false;
 let photoIndex = 0;
-let photos = 3;
+let num_photos = 5;
 let touchstartX = 0;
 let touchendX = 0;
 let mp3s = [];
@@ -78,6 +78,15 @@ function changePage(delta) {
         if (pageOrder[newPage] === "map") {
             injectIframeCSS();
         }
+    } else {
+        if (photoIndex === 0 && delta === -1) return;
+        if (photoIndex === num_photos - 1 && delta === 1) return;
+        let newPage = photoIndex + delta;
+
+        document.startViewTransition(() => {
+            document.getElementById("galleryPhoto").setAttribute("src", `images/library/${photoIndex}.png`);
+            photoIndex = newPage;
+        });
     }
 
 }
@@ -114,8 +123,30 @@ function runeClickHandler(event) {
         document.querySelector(`.rune[data-value='${activeRune}']`).classList.add("selected");
         document.getElementById("runeName").innerText = runeNames[activeRune];
         document.getElementById("runeSubtitle").innerText = runeSubtitles[activeRune];
-        document.getElementById("runeDescription").innerText = runeDescriptions[activeRune];
+        document.getElementById("runeDescription").innerHTML = runeDescriptions[activeRune] //.split('').map(char => `<span>${char}</span>`).join('');
+        document.getElementById("runeDescription").setAttribute("style", "--n: " + runeDescriptions[activeRune].length);
+        document.getElementById("runeSubtitle").animate( [
+            { width: '0px' },
+            { width: '20rem' }
+        ], {
+            duration: 1000, easing: 'ease-out'
+        });
+        if (runeNames[activeRune] === "Camera") {
+            galleryShown = true;
+            setTimeout(() => {
+                    document.getElementById("runesPage").classList.add("hidden");
+                    document.getElementById( "galleryPage").classList.remove("hidden");
+            }, 1200 );
+        }
     })
+    // setTimeout(()=>{
+    //     document.getElementById("runeSubtitle").style.animation = "typing 3.5s;"
+    //     document.getElementById("runeDescriptions").style.animation = "typing 3.5s;";
+    // }, 100);
+    // setTimeout(()=>{
+    //     document.getElementById("runeSubtitle").style.animation = ""
+    //     document.getElementById("runeDescriptions").style.animation = "";
+    // }, 3600);
     let currentTime = Date.now();
     if (currentTime - lastSfxTime > 2000) { // Throttle to prevent rapid replays
         mp3s[activeRune].currentTime = 0; // Rewind to start
@@ -151,38 +182,10 @@ function injectIframeCSS() {
     }
 }
 
-// var video = document.querySelector("#cameraVideo");
-// video.setAttribute('autoplay', '');
-// video.setAttribute('muted', '');
-// video.setAttribute('playsinline', '')
-// const constraints = {
-//     audio: false,
-//     video: {
-//         facingMode: 'user'
-//     }
-// }
-
-// function getVideo() {
-//     navigator.mediaDevices.getUserMedia(constraints)
-//         .then(localMediaStream => {
-//             console.log(localMediaStream);
-//
-// //  DEPRECIATION :
-// //       The following has been depreceated by major browsers as of Chrome and Firefox.
-// //       video.src = window.URL.createObjectURL(localMediaStream);
-// //       Please refer to these:
-// //       Deprecated  - https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
-// //       Newer Syntax - https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
-//             console.dir(video);
-//             if ('srcObject' in video) {
-//                 video.srcObject = localMediaStream;
-//             } else {
-//                 video.src = URL.createObjectURL(localMediaStream);
-//             }
-//             // video.src = window.URL.createObjectURL(localMediaStream);
-//             video.play();
-//         })
-//         .catch(err => {
-//             console.error(`OH NO!!!!`, err);
-//         });
-// }
+document.getElementById("galleryButton").addEventListener("click", () => {
+    galleryShown = false;
+    document.startViewTransition(() => {
+        document.getElementById("galleryPage").classList.add("hidden");
+        document.getElementById("runesPage").classList.remove("hidden");
+    });
+});

@@ -14,7 +14,7 @@
     <title>Sheikah Slate Mockup</title>
 </head>
 <body>
-<button style="position: absolute; top: 10px; left: 10px; z-index: 1000" onclick="window.location.reload();">
+<button style="position: absolute; top: 5px; left: 5px; z-index: 1000" onclick="window.location.reload();">
     Reload
 </button>
 <p id="log" class="hidden" style="color: white; position: absolute; bottom: 10px; left: 10px; font-family: monospace;">
@@ -47,9 +47,11 @@
 <div id="compendiumPage" class="page hidden">
     <img src="images/compendium.png">
 </div>
-<div id="cameraPage" class="page hidden">
-    <img src="images/camera_overlay_e.png" id="cameraOverlay">
-    <video id="cameraVideo" autoplay playsinline></video>
+<div id="galleryPage" class="page hidden">
+    <button id="galleryButton" style="position: absolute; top: 10px; left: 50px;">Back</button>
+    <img src="images/map_overlay.png" id="cameraOverlay">
+    <img src="images/library/1.png" id="galleryPhoto">
+<!--    <video id="cameraVideo" autoplay playsinline></video>-->
 </div>
 </body>
 <script src="main.js"></script>
@@ -144,7 +146,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 3rem;
+        height: 4rem;
         z-index: 20;
     }
     #mapPage iframe {
@@ -180,25 +182,24 @@
         font-weight: bold;
         color: #4becfc;
         /*text-shadow: 2px 2px 4px #000000;*/
-        margin-bottom: 2rem;
         text-align: center;
     }
     #runeSubtitle {
         position: absolute;
-        top: 13.1rem;
+        top: 14.1rem;
         font-family: "Calamity-Regular", "OpenSansBold", "Open Sans", sans-serif;
         font-size: 1rem;
         font-weight: bold;
         color: #4becfc;
         text-align: center;
         white-space: nowrap;
-        /*text-shadow: 2px 2px 4px #000000;*/
-        margin-bottom: 2rem;
-        animation: typing 1s, blink-caret 0.75s step-end infinite;
+        overflow: hidden;
+        margin: 0 auto;
+        /*animation: typing 1s, blink-caret 0.75s step-end infinite;*/
     }
 
 
-    p {
+    #runeDescription {
         position: absolute;
         top: 15.5rem;
         font-family: "Calamity-Regular", "OpenSansBold", "Open Sans", sans-serif;
@@ -206,20 +207,10 @@
         font-weight: bold;
         color: #4becfc;
         /*text-shadow: 2px 2px 4px #000000;*/
-        margin-bottom: 2rem;
         width: 22rem;
         animation: typing 3.5s, blink-caret 0.75s step-end infinite;
     }
 
-    /* The typing effect */
-    @keyframes typing {
-        from {
-            width: 0
-        }
-        to {
-            width: 22rem
-        }
-    }
     @font-face {
         font-family: Calamity-Regular;
         src: url('/assets/Calamity-Regular/Calamity-Regular.otf') format('opentype');
@@ -227,7 +218,7 @@
 
     @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
         html {
-            transform: rotate(-90deg);
+            transform: rotate(-90deg) translateX(-5%);
             transform-origin: left top;
             width: 100vh;
             height: 100vw;
